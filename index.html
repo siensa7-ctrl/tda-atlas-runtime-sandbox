@@ -1,10 +1,22 @@
 <!doctype html>
-<html lang="en">
+<html lang="it">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>TDA Atlas Runtime Sandbox</title>
-</head>
+  <style>
+    :root { color-scheme: light; font-family: system-ui, sans-serif; }
+    body { margin: 0; background: #f3f6f9; color: #17212b; }
+    main { max-width: 44rem; margin: 4rem auto; padding: 2rem; background: #fff; border-radius: .75rem; }
+    h1 { margin-top: 0; }
+    dl { display: grid; grid-template-columns: max-content 1fr; gap: .5rem 1rem; }
+    dt { font-weight: 700; }
+    dd { margin: 0; }
+    .warning { padding: 1rem; border-left: .25rem solid #b42318; background: #fff4f2; }
+    button { padding: .75rem 1rem; font: inherit; font-weight: 700; cursor: pointer; }
+    button:disabled { cursor: default; }
+    [hidden] { display: none; }
+  </style>
 <!-- Google Tag Manager -->
 <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
 new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
@@ -18,18 +30,50 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     probe_value: 1
   });
 </script>
+</head>
 <body>
   <!-- Google Tag Manager (noscript) -->
-<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TFZS9GHZ"
-height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
-<!-- End Google Tag Manager (noscript) -->
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TFZS9GHZ"
+  height="0" width="0" style="display:none;visibility:hidden" title="Google Tag Manager"></iframe></noscript>
+  <!-- End Google Tag Manager (noscript) -->
   <main>
     <h1>TDA Atlas Runtime Sandbox</h1>
-    <p>Controlled runtime environment for GTM and GA4 diagnostic testing.</p>
+    <p>Sandbox controllata per verifiche diagnostiche GTM/GA4. Questa azione usa soltanto dati sintetici.</p>
 
-    <button id="test-action" type="button">
-      Test action
+    <dl aria-label="Contratto della fixture business">
+      <dt>Evento atteso</dt><dd><code>generate_lead</code></dd>
+      <dt>Sorgente diagnostica</dt><dd><code>DATALAYER</code></dd>
+      <dt>Parametro obbligatorio</dt><dd><code>service_name</code> (top-level)</dd>
+    </dl>
+
+    <p>Durante la cattura Guided, premi una sola volta il pulsante.</p>
+    <p class="warning"><strong>Non inserire PII, credenziali, dati di pagamento o dati reali.</strong></p>
+
+    <button id="emit-generate-lead" type="button">
+      Emetti generate_lead sintetico
     </button>
+    <p id="event-confirmation" role="status" aria-live="polite" hidden>
+      Evento sintetico emesso.
+    </p>
   </main>
+  <script id="atlas-guided-business-fixture">
+    (() => {
+      const button = document.getElementById("emit-generate-lead");
+      const confirmation = document.getElementById("event-confirmation");
+      let emitted = false;
+
+      button.addEventListener("click", () => {
+        if (emitted) return;
+        emitted = true;
+        button.disabled = true;
+        window.dataLayer = window.dataLayer || [];
+        window.dataLayer.push({
+          event: "generate_lead",
+          service_name: "synthetic_atlas_guided_service"
+        });
+        confirmation.hidden = false;
+      });
+    })();
+  </script>
 </body>
 </html>
